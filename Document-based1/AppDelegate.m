@@ -22,4 +22,9 @@
     // Insert code here to tear down your application
 }
 
+- (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender{
+    //起動時に空のドキュメントを開かないように設定
+    return NO;
+}
+
 @end

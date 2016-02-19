@@ -8,8 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface Document : NSDocument
-
+@interface Document : NSDocument{
+    IBOutlet NSTextView *_textView;
+    NSData *dataFromFile;   //読み込みファイルへの参照を保持
+}
 
 @end
 

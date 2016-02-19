@@ -24,32 +24,44 @@
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController {
     [super windowControllerDidLoadNib:aController];
-    // Add any code here that needs to be executed once the windowController has loaded the document's window.
+    if (dataFromFile) {
+        [self loadtextViewWithData:dataFromFile];
+        dataFromFile = nil;
+    }
 }
 
 + (BOOL)autosavesInPlace {
-    return YES;
+    //オートセーブのON/OFF
+    return NO;
 }
 
 - (NSString *)windowNibName {
-    // Override returning the nib file name of the document
-    // If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this method and override -makeWindowControllers instead.
     return @"Document";
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
-    // Insert code here to write your document to data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning nil.
-    // You can also choose to override -fileWrapperOfType:error:, -writeToURL:ofType:error:, or -writeToURL:ofType:forSaveOperation:originalContentsURL:error: instead.
-    [NSException raise:@"UnimplementedMethod" format:@"%@ is unimplemented", NSStringFromSelector(_cmd)];
-    return nil;
+    //サポートするタイプのドキュメントデータをNSDataオブジェクトにパッケージして返す
+    //テキストビューのテキストをデータとして返す
+    NSData *data = [[_textView string]dataUsingEncoding:NSUTF8StringEncoding];
+    return data;
 }
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
-    // Insert code here to read your document from the given data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning NO.
-    // You can also choose to override -readFromFileWrapper:ofType:error: or -readFromURL:ofType:error: instead.
-    // If you override either of these, you should also override -isEntireFileLoaded to return NO if the contents are lazily loaded.
-    [NSException raise:@"UnimplementedMethod" format:@"%@ is unimplemented", NSStringFromSelector(_cmd)];
+    //ドキュメントデータを読み込みドキュメントウインドウに表示
+    if (_textView) {
+        //復帰のための読み込みの場合（既存のテキストビューに直接読み込む）
+        [self loadtextViewWithData:data];
+    } else {
+        //ファイルを開く場合
+        dataFromFile = data;
+    }
     return YES;
+}
+
+//ファイルからテキストビューにデータを読み込む
+- (void)loadtextViewWithData:(NSData *)data{
+    NSString *txt = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    [_textView replaceCharactersInRange:NSMakeRange(0, [[_textView string]length]) withString:txt];
 }
 
 @end
