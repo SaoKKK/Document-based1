@@ -24,9 +24,9 @@
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController {
     [super windowControllerDidLoadNib:aController];
-    if (dataFromFile) {
-        [self loadtextViewWithData:dataFromFile];
-        dataFromFile = nil;
+    if (strFromFile) {
+        [self setValueToTextView:strFromFile];
+        strFromFile = nil;
     }
 }
 
@@ -48,19 +48,25 @@
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
     //ドキュメントデータを読み込みドキュメントウインドウに表示
-    if (_textView) {
-        //復帰のための読み込みの場合（既存のテキストビューに直接読み込む）
-        [self loadtextViewWithData:data];
+    //ファイルからテキストを読み込み
+    NSString *txt = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    if (! txt) {
+        *outError = [NSError errorWithDomain:NSOSStatusErrorDomain code:unimpErr userInfo:NULL];
+        return NO;
     } else {
-        //ファイルを開く場合
-        dataFromFile = data;
+        if (_textView) {
+            //復帰のための読み込みの場合（既存のテキストビューに直接読み込む）
+            [self setValueToTextView:txt];
+        } else {
+            //ファイルを開く場合
+            strFromFile = txt;
+        }
+        return YES;
     }
-    return YES;
 }
 
-//ファイルからテキストビューにデータを読み込む
-- (void)loadtextViewWithData:(NSData *)data{
-    NSString *txt = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+//テキストビューにテキストをセット
+- (void)setValueToTextView:(NSString*)txt{
     [_textView replaceCharactersInRange:NSMakeRange(0, [[_textView string]length]) withString:txt];
 }
 

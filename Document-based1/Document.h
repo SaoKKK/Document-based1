@@ -10,7 +10,7 @@
 
 @interface Document : NSDocument{
     IBOutlet NSTextView *_textView;
-    NSData *dataFromFile;   //読み込みファイルへの参照を保持
+    NSString *strFromFile;   //読み込みテキストを保持
 }
 
 @end
