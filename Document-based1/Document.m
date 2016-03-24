@@ -70,4 +70,9 @@
     [_textView replaceCharactersInRange:NSMakeRange(0, [[_textView string]length]) withString:txt];
 }
 
+//更新フラグを立てる
+- (IBAction)updateChangeInfoToDocument:(id)sender{
+    [self updateChangeCount:NSChangeDone];
+}
+
 @end

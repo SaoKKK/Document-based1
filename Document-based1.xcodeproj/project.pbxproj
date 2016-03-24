@@ -305,6 +305,7 @@
 				B9AD999E1C76C1A2008C29A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
