@@ -75,4 +75,22 @@
     [self updateChangeCount:NSChangeDone];
 }
 
+- (NSPrintOperation*)printOperationWithSettings:(NSDictionary<NSString *,id> *)printSettings error:(NSError * _Nullable __autoreleasing *)outError{
+    NSString *docTitle = [self.windowControllers objectAtIndex:0].window.title;
+    NSPrintOperation *op = [NSPrintOperation printOperationWithView:_textView printInfo:self.printInfo];
+    [op setJobTitle:docTitle];
+    return op;
+}
+
+- (NSPrintInfo*)printInfo{
+    NSPrintInfo *printInfo = [super printInfo];
+    [printInfo setHorizontallyCentered:NO];
+    [printInfo setVerticallyCentered:NO];
+    [printInfo setLeftMargin:72.0];
+    [printInfo setRightMargin:72.0];
+    [printInfo setTopMargin:72.0];
+    [printInfo setBottomMargin:72.0];
+    return printInfo;
+}
+
 @end
