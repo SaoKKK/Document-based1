@@ -12,7 +12,11 @@
 
 @end
 
-@implementation Document
+@implementation Document{
+    IBOutlet NSTextField *txtNewTxt;
+    IBOutlet NSScrollView *scrView;
+    IBOutlet NSWindow *window;
+}
 
 - (instancetype)init {
     self = [super init];
@@ -91,6 +95,33 @@
     [printInfo setTopMargin:72.0];
     [printInfo setBottomMargin:72.0];
     return printInfo;
+}
+
+- (IBAction)pshChangeTxt1:(id)sender {
+    NSUndoManager *_undoMgr = self.undoManager;
+    [[_undoMgr prepareWithInvocationTarget:self] undoChangeTxt:_textView.string.copy];
+    [_undoMgr setActionName:NSLocalizedString(@"TxtChange", @"")];
+    [[sender window] makeFirstResponder:_textView];
+    [_textView setString:txtNewTxt.stringValue];
+}
+
+- (void)undoChangeTxt:(NSString*)oldTxt{
+    NSUndoManager *_undoMgr = self.undoManager;
+    [[_undoMgr prepareWithInvocationTarget:self] undoChangeTxt:_textView.string.copy];
+    [_undoMgr setActionName:NSLocalizedString(@"TxtChange", @"")];
+    [_textView setString:oldTxt];
+}
+
+- (IBAction)pshChangeTxt2:(id)sender {
+    [self changeTxt:txtNewTxt.stringValue];
+}
+
+- (void)changeTxt:(NSString*)aTxt{
+    NSUndoManager *_undoMgr = self.undoManager;
+    [_undoMgr registerUndoWithTarget:self selector:@selector(changeTxt:) object:_textView.string.copy];
+    [_undoMgr setActionName:NSLocalizedString(@"TxtChange", @"")];
+    [_textView.window makeFirstResponder:_textView];
+    [_textView setString:aTxt];
 }
 
 @end
